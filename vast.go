@@ -208,7 +208,7 @@ type Creative struct {
 	AdID string `xml:"adId,attr,omitempty" json:",omitempty"`
 	// Identifies the ad with which the creative is served (legacy ad id attribute name)
 	// for staying compatible with VAST 2.0/3.0
-	LegacyAdID string `xml:"AdID,attr,omitempty" json:",omitempty"
+	LegacyAdID string `xml:"AdID,attr,omitempty" json:",omitempty"`
 	// The technology used for any included API
 	APIFramework string `xml:"apiFramework,attr,omitempty" json:",omitempty"`
 	// If present, defines a linear creative
