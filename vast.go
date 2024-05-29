@@ -206,6 +206,9 @@ type Creative struct {
 	Sequence int `xml:"sequence,attr,omitempty" json:",omitempty"`
 	// Identifies the ad with which the creative is served
 	AdID string `xml:"adId,attr,omitempty" json:",omitempty"`
+	// Identifies the ad with which the creative is served (legacy ad id attribute name)
+	// for staying compatible with VAST 2.0/3.0
+	LegacyAdID string `xml:"AdID,attr,omitempty" json:",omitempty"
 	// The technology used for any included API
 	APIFramework string `xml:"apiFramework,attr,omitempty" json:",omitempty"`
 	// If present, defines a linear creative
@@ -228,6 +231,27 @@ type Creative struct {
 	// The nested <CreativeExtension> includes an attribute for type, which
 	// specifies the MIME type needed to execute the extension.
 	CreativeExtensions *[]Extension `xml:"CreativeExtensions>CreativeExtension,omitempty" json:",omitempty"`
+}
+
+// Custom UnmarshalXML method
+func (c *Creative) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+	type Alias Creative
+	aux := &struct {
+		*Alias
+	}{
+		Alias: (*Alias)(c),
+	}
+
+	if err := d.DecodeElement(aux, &start); err != nil {
+		return err
+	}
+
+	// If AdID is empty and LegacyAdID isn't, set AdID to LegacyAdID
+	if c.AdID == "" && c.LegacyAdID != "" {
+		c.AdID = c.LegacyAdID
+	}
+
+	return nil
 }
 
 // <CompanionAds> contains companions creatives
