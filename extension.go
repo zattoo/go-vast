@@ -5,9 +5,10 @@ import "encoding/xml"
 // Extension represent arbitrary XML provided by the platform to extend the
 // VAST response or by custom trackers.
 type Extension struct {
-	Type           string     `xml:"type,attr,omitempty"`
-	CustomTracking []Tracking `xml:"CustomTracking>Tracking,omitempty"  json:",omitempty"`
-	Data           string     `xml:",innerxml" json:",omitempty"`
+	Type            string           `xml:"type,attr,omitempty"`
+	CustomTracking  []Tracking       `xml:"CustomTracking>Tracking,omitempty"  json:",omitempty"`
+	AdVerifications *AdVerifications `xml:"AdVerifications,omitempty"  json:",omitempty"`
+	Data            string           `xml:",innerxml" json:",omitempty"`
 }
 
 // the extension type as a middleware in the encoding process.
@@ -23,10 +24,15 @@ func (e Extension) MarshalXML(enc *xml.Encoder, start xml.StartElement) error {
 	// create a temporary element from a wrapper Extension, copy what we need to
 	// it and return it's encoding.
 	var e2 interface{}
-	// if we have custom trackers, we should ignore the data, if not, then we
+	// if we have custom trackers or ad verifications, we should ignore the data, if not, then we
 	// should consider only the data.
 	if len(e.CustomTracking) > 0 {
 		e2 = extension{Type: e.Type, CustomTracking: e.CustomTracking}
+	} else if e.AdVerifications != nil {
+		e2 = extension{
+			Type:            e.Type,
+			AdVerifications: e.AdVerifications,
+		}
 	} else {
 		e2 = extensionNoCT{Type: e.Type, Data: e.Data}
 	}
@@ -42,11 +48,14 @@ func (e *Extension) UnmarshalXML(dec *xml.Decoder, start xml.StartElement) error
 	if err := dec.DecodeElement(&e2, &start); err != nil {
 		return err
 	}
-	// copy the type and the customTracking
+
+	// copy the type, customTracking and adVerifications
 	e.Type = e2.Type
 	e.CustomTracking = e2.CustomTracking
-	// copy the data only of customTracking is empty
-	if len(e.CustomTracking) == 0 {
+	e.AdVerifications = e2.AdVerifications
+
+	// copy the data only of customTracking and adVerifications are empty
+	if len(e.CustomTracking) == 0 && e.AdVerifications == nil {
 		e.Data = e2.Data
 	}
 	return nil
