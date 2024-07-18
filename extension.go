@@ -5,8 +5,10 @@ import "encoding/xml"
 // Extension represent arbitrary XML provided by the platform to extend the
 // VAST response or by custom trackers.
 type Extension struct {
-	Type            string         `xml:"type,attr,omitempty"`
-	CustomTracking  []Tracking     `xml:"CustomTracking>Tracking,omitempty"  json:",omitempty"`
+	Type           string     `xml:"type,attr,omitempty"`
+	CustomTracking []Tracking `xml:"CustomTracking>Tracking,omitempty"  json:",omitempty"`
+	// AdVerifications are IAB Open Measurement tags backported to VAST 2 and 3 as an extension
+	// TODO: Fix marshal to conditionally remove it?
 	AdVerifications []Verification `xml:"AdVerifications>Verification,omitempty"  json:",omitempty"`
 	Data            string         `xml:",innerxml" json:",omitempty"`
 }
@@ -26,15 +28,10 @@ func (e Extension) MarshalXML(enc *xml.Encoder, start xml.StartElement) error {
 	var e2 interface{}
 	// if we have custom trackers or ad verifications, we should ignore the data, if not, then we
 	// should consider only the data.
-	if len(e.CustomTracking) > 0 {
-		e2 = extension{Type: e.Type, CustomTracking: e.CustomTracking}
-	} else if len(e.AdVerifications) > 0 {
-		e2 = extension{
-			Type:            e.Type,
-			AdVerifications: e.AdVerifications,
-		}
-	} else {
+	if len(e.CustomTracking) == 0 || len(e.AdVerifications) == 0 {
 		e2 = extensionOnlyData{Type: e.Type, Data: e.Data}
+	} else {
+		e2 = extension{Type: e.Type, CustomTracking: e.CustomTracking, AdVerifications: e.AdVerifications}
 	}
 
 	return enc.EncodeElement(e2, start)
@@ -54,7 +51,7 @@ func (e *Extension) UnmarshalXML(dec *xml.Decoder, start xml.StartElement) error
 	e.CustomTracking = e2.CustomTracking
 	e.AdVerifications = e2.AdVerifications
 
-	// copy the data only of customTracking and adVerifications are empty
+	// copy the data only if customTracking and adVerifications are empty
 	if len(e.CustomTracking) == 0 && len(e.AdVerifications) == 0 {
 		e.Data = e2.Data
 	}
