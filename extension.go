@@ -7,7 +7,7 @@ import "encoding/xml"
 type Extension struct {
 	Type            string         `xml:"type,attr,omitempty"`
 	CustomTracking  []Tracking     `xml:"CustomTracking>Tracking,omitempty"  json:",omitempty"`
-	AdVerifications []Verification `xml:"AdVerifications,omitempty"  json:",omitempty"`
+	AdVerifications []Verification `xml:"AdVerifications>Verification,omitempty"  json:",omitempty"`
 	Data            string         `xml:",innerxml" json:",omitempty"`
 }
 
