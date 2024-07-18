@@ -5,10 +5,10 @@ import "encoding/xml"
 // Extension represent arbitrary XML provided by the platform to extend the
 // VAST response or by custom trackers.
 type Extension struct {
-	Type            string           `xml:"type,attr,omitempty"`
-	CustomTracking  []Tracking       `xml:"CustomTracking>Tracking,omitempty"  json:",omitempty"`
-	AdVerifications *AdVerifications `xml:"AdVerifications,omitempty"  json:",omitempty"`
-	Data            string           `xml:",innerxml" json:",omitempty"`
+	Type            string          `xml:"type,attr,omitempty"`
+	CustomTracking  []Tracking      `xml:"CustomTracking>Tracking,omitempty"  json:",omitempty"`
+	AdVerifications *[]Verification `xml:"AdVerifications,omitempty"  json:",omitempty"`
+	Data            string          `xml:",innerxml" json:",omitempty"`
 }
 
 // the extension type as a middleware in the encoding process.
