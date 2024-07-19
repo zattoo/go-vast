@@ -72,20 +72,20 @@ func TestExtensionCustomAdVerification(t *testing.T) {
 	// assert the resulting extension
 	assert.Equal(t, "AdVerifications", e.Type)
 	assert.Empty(t, e.Data)
-	if assert.Len(t, e.AdVerifications, 1) {
-		assert.Equal(t, "doubleclickbygoogle.com-omid-video", e.AdVerifications[0].Vendor)
-		if assert.Len(t, e.AdVerifications[0].JavaScriptResource, 1) {
+	if assert.NotNil(t, e.AdVerifications) && assert.Len(t, *e.AdVerifications, 1) {
+		assert.Equal(t, "doubleclickbygoogle.com-omid-video", (*e.AdVerifications)[0].Vendor)
+		if assert.Len(t, (*e.AdVerifications)[0].JavaScriptResource, 1) {
 			assert.Equal(t, JavaScriptResource{
 				ApiFramework:    "omid",
 				BrowserOptional: true,
 				URI:             "https://example.com/verify.js",
-			}, e.AdVerifications[0].JavaScriptResource[0])
+			}, (*e.AdVerifications)[0].JavaScriptResource[0])
 		}
-		if assert.Len(t, e.AdVerifications[0].TrackingEvents, 1) {
+		if assert.Len(t, (*e.AdVerifications)[0].TrackingEvents, 1) {
 			assert.Equal(t, Tracking{
 				Event: "verificationNotExecuted",
 				URI:   "https://pagead2.googlesyndication.com/pagead/interaction/?ai=Bt7src9CCZofvMqChiM0Pi8qQkAPFnbOVRgAAABABII64hW84AVjUt8DBgwRglfrwgYwHsgETZ29vZ2xlYWRzLmdpdGh1Yi5pb7oBCjcyOHg5MF94bWzIAQXaATRodHRwczovL2dvb2dsZWFkcy5naXRodWIuaW8vZ29vZ2xlYWRzLWltYS1odG1sNS92c2kvwAIC4AIA6gIlLzIxNzc1NzQ0OTIzL2V4dGVybmFsL3V0aWxpdHlfc2FtcGxlc_gC8NEegAMBkAPIBpgD4AOoAwHgBAHSBQYQj6GjiRagBiOoB7i-sQKoB5oGqAfz0RuoB5bYG6gHqpuxAqgHg62xAqgH4L2xAqgH_56xAqgH35-xAqgH-MKxAqgH-8KxAtgHAdIIMQiR4YBwEAEYHTIH64uA7r-AAToPgNCAgICAhAiAgICAgJQuSL39wTpY1cHtiZmGhwPYCAKACgWYCwGqDQJERdAVAfgWAYAXAQ&sigh=UTbooye19j8&label=active_view_verification_rejected&errorcode=%5BREASON%5D",
-			}, e.AdVerifications[0].TrackingEvents[0])
+			}, (*e.AdVerifications)[0].TrackingEvents[0])
 		}
 	}
 }
@@ -137,20 +137,20 @@ func TestMultipleExtensions(t *testing.T) {
 			e := extensions[1]
 			assert.Equal(t, "AdVerifications", e.Type)
 			assert.Empty(t, e.Data)
-			if assert.Len(t, e.AdVerifications, 1) {
-				assert.Equal(t, "doubleclickbygoogle.com-omid-video", e.AdVerifications[0].Vendor)
-				if assert.Len(t, e.AdVerifications[0].JavaScriptResource, 1) {
+			if assert.NotNil(t, e.AdVerifications) && assert.Len(t, *e.AdVerifications, 1) {
+				assert.Equal(t, "doubleclickbygoogle.com-omid-video", (*e.AdVerifications)[0].Vendor)
+				if assert.Len(t, (*e.AdVerifications)[0].JavaScriptResource, 1) {
 					assert.Equal(t, JavaScriptResource{
 						ApiFramework:    "omid",
 						BrowserOptional: true,
 						URI:             "https://example.com/verify.js",
-					}, e.AdVerifications[0].JavaScriptResource[0])
+					}, (*e.AdVerifications)[0].JavaScriptResource[0])
 				}
-				if assert.Len(t, e.AdVerifications[0].TrackingEvents, 1) {
+				if assert.Len(t, (*e.AdVerifications)[0].TrackingEvents, 1) {
 					assert.Equal(t, Tracking{
 						Event: "verificationNotExecuted",
 						URI:   "https://pagead2.googlesyndication.com/pagead/interaction/?ai=Bt7src9CCZofvMqChiM0Pi8qQkAPFnbOVRgAAABABII64hW84AVjUt8DBgwRglfrwgYwHsgETZ29vZ2xlYWRzLmdpdGh1Yi5pb7oBCjcyOHg5MF94bWzIAQXaATRodHRwczovL2dvb2dsZWFkcy5naXRodWIuaW8vZ29vZ2xlYWRzLWltYS1odG1sNS92c2kvwAIC4AIA6gIlLzIxNzc1NzQ0OTIzL2V4dGVybmFsL3V0aWxpdHlfc2FtcGxlc_gC8NEegAMBkAPIBpgD4AOoAwHgBAHSBQYQj6GjiRagBiOoB7i-sQKoB5oGqAfz0RuoB5bYG6gHqpuxAqgHg62xAqgH4L2xAqgH_56xAqgH35-xAqgH-MKxAqgH-8KxAtgHAdIIMQiR4YBwEAEYHTIH64uA7r-AAToPgNCAgICAhAiAgICAgJQuSL39wTpY1cHtiZmGhwPYCAKACgWYCwGqDQJERdAVAfgWAYAXAQ&sigh=UTbooye19j8&label=active_view_verification_rejected&errorcode=%5BREASON%5D",
-					}, e.AdVerifications[0].TrackingEvents[0])
+					}, (*e.AdVerifications)[0].TrackingEvents[0])
 				}
 			}
 		}

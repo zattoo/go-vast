@@ -8,9 +8,8 @@ type Extension struct {
 	Type           string     `xml:"type,attr,omitempty"`
 	CustomTracking []Tracking `xml:"CustomTracking>Tracking,omitempty"  json:",omitempty"`
 	// AdVerifications are IAB Open Measurement tags backported to VAST 2 and 3 as an extension
-	// TODO: Fix marshal to conditionally remove it?
-	AdVerifications []Verification `xml:"AdVerifications>Verification,omitempty"  json:",omitempty"`
-	Data            string         `xml:",innerxml" json:",omitempty"`
+	AdVerifications *[]Verification `xml:"AdVerifications>Verification,omitempty"  json:",omitempty"`
+	Data            string          `xml:",innerxml" json:",omitempty"`
 }
 
 // the extension type as a middleware in the encoding process.
@@ -27,8 +26,8 @@ func (e Extension) MarshalXML(enc *xml.Encoder, start xml.StartElement) error {
 	// it and return it's encoding.
 	var e2 interface{}
 	// if we have custom trackers or ad verifications, we should ignore the data, if not, then we
-	// should consider only the data.
-	if len(e.CustomTracking) == 0 || len(e.AdVerifications) == 0 {
+	// should consider only the data
+	if len(e.CustomTracking) == 0 && (e.AdVerifications == nil || len(*e.AdVerifications) == 0) {
 		e2 = extensionOnlyData{Type: e.Type, Data: e.Data}
 	} else {
 		e2 = extension{Type: e.Type, CustomTracking: e.CustomTracking, AdVerifications: e.AdVerifications}
@@ -52,7 +51,7 @@ func (e *Extension) UnmarshalXML(dec *xml.Decoder, start xml.StartElement) error
 	e.AdVerifications = e2.AdVerifications
 
 	// copy the data only if customTracking and adVerifications are empty
-	if len(e.CustomTracking) == 0 && len(e.AdVerifications) == 0 {
+	if len(e.CustomTracking) == 0 && (e.AdVerifications == nil || len(*e.AdVerifications) == 0) {
 		e.Data = e2.Data
 	}
 	return nil
