@@ -7,13 +7,15 @@ import "encoding/xml"
 type Extension struct {
 	Type           string     `xml:"type,attr,omitempty"`
 	CustomTracking []Tracking `xml:"CustomTracking>Tracking,omitempty"  json:",omitempty"`
-	Data           string     `xml:",innerxml" json:",omitempty"`
+	// AdVerifications are IAB Open Measurement tags backported to VAST 2 and 3 as an extension
+	AdVerifications *[]Verification `xml:"AdVerifications>Verification,omitempty"  json:",omitempty"`
+	Data            string          `xml:",innerxml" json:",omitempty"`
 }
 
 // the extension type as a middleware in the encoding process.
 type extension Extension
 
-type extensionNoCT struct {
+type extensionOnlyData struct {
 	Type string `xml:"type,attr,omitempty"`
 	Data string `xml:",innerxml" json:",omitempty"`
 }
@@ -23,12 +25,12 @@ func (e Extension) MarshalXML(enc *xml.Encoder, start xml.StartElement) error {
 	// create a temporary element from a wrapper Extension, copy what we need to
 	// it and return it's encoding.
 	var e2 interface{}
-	// if we have custom trackers, we should ignore the data, if not, then we
-	// should consider only the data.
-	if len(e.CustomTracking) > 0 {
-		e2 = extension{Type: e.Type, CustomTracking: e.CustomTracking}
+	// if we have custom trackers or ad verifications, we should ignore the data, if not, then we
+	// should consider only the data
+	if len(e.CustomTracking) == 0 && (e.AdVerifications == nil || len(*e.AdVerifications) == 0) {
+		e2 = extensionOnlyData{Type: e.Type, Data: e.Data}
 	} else {
-		e2 = extensionNoCT{Type: e.Type, Data: e.Data}
+		e2 = extension{Type: e.Type, CustomTracking: e.CustomTracking, AdVerifications: e.AdVerifications}
 	}
 
 	return enc.EncodeElement(e2, start)
@@ -42,11 +44,14 @@ func (e *Extension) UnmarshalXML(dec *xml.Decoder, start xml.StartElement) error
 	if err := dec.DecodeElement(&e2, &start); err != nil {
 		return err
 	}
-	// copy the type and the customTracking
+
+	// copy the type, customTracking and adVerifications
 	e.Type = e2.Type
 	e.CustomTracking = e2.CustomTracking
-	// copy the data only of customTracking is empty
-	if len(e.CustomTracking) == 0 {
+	e.AdVerifications = e2.AdVerifications
+
+	// copy the data only if customTracking and adVerifications are empty
+	if len(e.CustomTracking) == 0 && (e.AdVerifications == nil || len(*e.AdVerifications) == 0) {
 		e.Data = e2.Data
 	}
 	return nil
