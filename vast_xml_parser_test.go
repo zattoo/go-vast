@@ -71,7 +71,7 @@ func TestVastParser(t *testing.T) {
 									URI: "\n                https://pagead2.googlesyndication.com/pcs/view?xai=AKAOjsshftjNvjbKP9QAzJDwK7vT8ckUjR8j3ipt-UVk1r98ZRAlQPSxUoq5mti16wWwDqZ5H2t4Ba6Q9RflSU9yUonWsIEWW_0ALB0TRfjV97NW-ALY_Vd29aOHRNfzQGA_QqNH5Je4BgA893seJLACl5q1KDuGnQiOfP1tWvC6KDEaHIGj79J_rJ_YPFRV9khoNLuQTmnW0TI1zr1dHhiR_1NQSoV1DxXn7dRQbffQHYXpLq9MDGgB6pyr9QjQhSlh1EVOqZ33lmXgm-W5a01mEXPD8wlZPoDpos0qMVilhP8lgcSTOs7jQASEL_GrgJ0u6vGBVZPOHrKP0Zxn0ouXA93xtokxQGKvuh-uaTHVjMOYbQgxxbY6KqU49yn2H1AaUHRMiKZ0oZkN-30&sig=Cg0ArKJSzBhGwFhIktYJEAE&uach_m=%5BUACH%5D&adurl=",
 								},
 							},
-							AdVerifications: []Verification{
+							AdVerifications: &[]Verification{
 								{
 									Vendor: "doubleclickbygoogle.com-omid-video",
 									JavaScriptResource: []JavaScriptResource{{
