@@ -218,7 +218,7 @@ type Creative struct {
 	// If defined, defines non linear creatives
 	NonLinearAds *NonLinearAds `xml:",omitempty" json:",omitempty"`
 	// If present, provides a VAST 4.x universal ad id
-	UniversalAdID *[]UniversalAdID `xml:",omitempty" json:",omitempty"`
+	UniversalAdID *[]UniversalAdID `xml:"UniversalAdId,omitempty" json:",omitempty"`
 	// When an API framework is needed to execute creative, a
 	// <CreativeExtensions> element can be added under the <Creative>. This
 	// extension can be used to load an executable creative with or without using

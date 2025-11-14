@@ -91,7 +91,11 @@ func TestVastParser(t *testing.T) {
 									ID:         "138381630420",
 									AdID:       "IdhwY3cRXqA",
 									LegacyAdID: "IdhwY3cRXqA",
-									Sequence:   1,
+									UniversalAdID: &[]UniversalAdID{{
+										IDRegistry: "googlevideo",
+										ID:         "IdhwY3cRXqA",
+									}},
+									Sequence: 1,
 									Linear: &Linear{
 										Duration: Duration(10 * time.Second),
 										TrackingEvents: []Tracking{
