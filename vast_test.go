@@ -3,13 +3,15 @@ package vast
 import (
 	"encoding/json"
 	"encoding/xml"
-	"github.com/pquerna/ffjson/ffjson"
 	"io/ioutil"
 	"os"
 	"reflect"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/pquerna/ffjson/ffjson"
+	"github.com/stretchr/testify/require"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -21,7 +23,7 @@ func TestQuickStart(t *testing.T) {
 		Version: "3.0",
 		Ads: []Ad{
 			{
-				ID:   "123",
+				ID: "123",
 				InLine: &InLine{
 					AdSystem: &AdSystem{Name: "DSP"},
 					AdTitle:  CDATAString{CDATA: "adTitle"},
@@ -131,7 +133,7 @@ func createVastDemo() (*VAST, error) {
 		XMLNS:   "http://www.iab.com/VAST",
 		Ads: []Ad{
 			{
-				ID:   adId,
+				ID: adId,
 				InLine: &InLine{
 					AdSystem: &AdSystem{Name: "DSP"},
 					AdTitle:  CDATAString{CDATA: adTitle},
@@ -861,24 +863,19 @@ func TestIcons(t *testing.T) {
 
 func TestUniversalAdID(t *testing.T) {
 	v, _, _, err := loadFixture("testdata/vast4_universal_ad_id.xml")
-	if !assert.NoError(t, err) {
-		return
-	}
+	require.NoError(t, err)
 
-	assert.Equal(t, "4.0", v.Version)
-	if assert.Len(t, v.Ads, 1) {
-		ad := v.Ads[0]
-		assert.Equal(t, "20008", ad.ID)
-		if assert.NotNil(t, ad.InLine) {
-			if assert.NotNil(t, ad.InLine.Extensions) {
-				if assert.Len(t, ad.InLine.Creatives, 1) {
-					if assert.NotNil(t, ad.InLine.Creatives[0].UniversalAdID) {
-						creative := ad.InLine.Creatives[0]
-						assert.Equal(t, "Ad-ID", creative.UniversalAdID.IDRegistry)
-						assert.Equal(t, "8465", creative.UniversalAdID.ID)
-					}
-				}
-			}
-		}
-	}
+	require.Equal(t, "4.0", v.Version)
+	require.Len(t, v.Ads, 1)
+
+	ad := v.Ads[0]
+	require.Equal(t, "20008", ad.ID)
+	require.NotNil(t, ad.InLine)
+	require.NotNil(t, ad.InLine.Extensions)
+	require.Len(t, ad.InLine.Creatives, 1)
+
+	creative := ad.InLine.Creatives[0]
+	require.NotNil(t, creative.UniversalAdID)
+	require.Equal(t, "Ad-ID", creative.UniversalAdID.IDRegistry)
+	require.Equal(t, "8465", creative.UniversalAdID.ID)
 }

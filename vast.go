@@ -26,14 +26,14 @@ type VAST struct {
 //
 // Each <Ad> contains a single <InLine> element or <Wrapper> element (but never both).
 type Ad struct {
-	InLine   *InLine  `xml:",omitempty" json:",omitempty"`
-	Wrapper  *Wrapper `xml:",omitempty" json:",omitempty"`
+	InLine  *InLine  `xml:",omitempty" json:",omitempty"`
+	Wrapper *Wrapper `xml:",omitempty" json:",omitempty"`
 	// An ad server-defined identifier string for the ad
 	ID string `xml:"id,attr,omitempty" json:",omitempty"`
 	// A number greater than zero (0) that identifies the sequence in which
 	// an ad should play; all <Ad> elements with sequence values are part of
 	// a pod and are intended to be played in sequence
-	Sequence int      `xml:"sequence,attr,omitempty" json:",omitempty"`
+	Sequence int `xml:"sequence,attr,omitempty" json:",omitempty"`
 	// An optional string that identifies the type of ad
 	// Possible values –video, audio, hybrid. Assumed to be video if attribute is not present
 	AdType string `xml:"adType,attr,omitempty" json:",omitempty"`
@@ -137,8 +137,8 @@ type Wrapper struct {
 	Impressions []Impression `xml:"Impression"`
 	// URL of ad tag of downstream Secondary Ad Server
 	// The container for one or more <Creative> elements
-	Creatives []CreativeWrapper `xml:"Creatives>Creative"`
-	VASTAdTagURI CDATAString
+	Creatives                []CreativeWrapper `xml:"Creatives>Creative"`
+	VASTAdTagURI             CDATAString
 	FallbackOnNoAd           *bool `xml:"fallbackOnNoAd,attr,omitempty" json:",omitempty"`
 	AllowMultipleAds         *bool `xml:"allowMultipleAds,attr,omitempty" json:",omitempty"`
 	FollowAdditionalWrappers *bool `xml:"followAdditionalWrappers,attr,omitempty" json:",omitempty"`
@@ -245,14 +245,14 @@ type Linear struct {
 	// represents milliseconds and is optional. This skipoffset value
 	// indicates when the skip control should be provided after the creative
 	// begins playing.
-	SkipOffset *Offset `xml:"skipoffset,attr,omitempty" json:",omitempty"`
+	SkipOffset     *Offset       `xml:"skipoffset,attr,omitempty" json:",omitempty"`
 	Icons          *Icons        `json:",omitempty"`
 	TrackingEvents []Tracking    `xml:"TrackingEvents>Tracking,omitempty" json:",omitempty"`
 	AdParameters   *AdParameters `xml:",omitempty" json:",omitempty"`
 	// Duration in standard time format, hh:mm:ss
-	Duration       Duration		 `xml:"Duration,omitempty" json:",omitempty"`
-	MediaFiles     []MediaFile   `xml:"MediaFiles>MediaFile,omitempty" json:",omitempty"`
-	VideoClicks    *VideoClicks  `xml:",omitempty" json:",omitempty"`
+	Duration    Duration     `xml:"Duration,omitempty" json:",omitempty"`
+	MediaFiles  []MediaFile  `xml:"MediaFiles>MediaFile,omitempty" json:",omitempty"`
+	VideoClicks *VideoClicks `xml:",omitempty" json:",omitempty"`
 }
 
 // LinearWrapper defines a wrapped linear creative
@@ -532,9 +532,9 @@ type MediaFile struct {
 	// placed in key/value pairs on the asset request).
 	APIFramework string `xml:"apiFramework,attr,omitempty" json:",omitempty"`
 	URI          string `xml:",cdata"`
-	// Optional field that helps eliminate the need to calculate the size based on bitrate and duration. 
+	// Optional field that helps eliminate the need to calculate the size based on bitrate and duration.
 	FileSize int `xml:"fileSize,attr,omitempty" json:",omitempty"`
-	// Type of media file (2D / 3D / 360 / etc). 
+	// Type of media file (2D / 3D / 360 / etc).
 	MediaType string `xml:"mediaType,attr,omitempty" json:",omitempty"`
 }
 
