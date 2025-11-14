@@ -1,6 +1,6 @@
 module github.com/zattoo/go-vast
 
-go 1.21
+go 1.23
 
 require (
 	github.com/pquerna/ffjson v0.0.0-20190930134022-aa0246cd15f7
