@@ -26,11 +26,6 @@ type Extension struct {
 // the extension type as a middleware in the encoding process.
 type extension Extension
 
-type extensionOnlyData struct {
-	Type string `xml:"type,attr,omitempty"`
-	Data string `xml:",innerxml" json:",omitempty"`
-}
-
 // MarshalXML implements xml.Marshaler interface.
 func (e Extension) MarshalXML(enc *xml.Encoder, start xml.StartElement) error {
 	// create a temporary element from a wrapper Extension, copy what we need to
