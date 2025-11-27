@@ -46,7 +46,7 @@ func TestExtensionCustomTracking(t *testing.T) {
 
 	// assert the resulting extension
 	assert.Equal(t, "testCustomTracking", e.Type)
-	assert.Empty(t, string(e.Data))
+
 	if assert.Len(t, e.CustomTracking, 2) {
 		// first event
 		assert.Equal(t, "event.1", e.CustomTracking[0].Event)
@@ -71,7 +71,7 @@ func TestExtensionCustomAdVerification(t *testing.T) {
 
 	// assert the resulting extension
 	assert.Equal(t, "AdVerifications", e.Type)
-	assert.Empty(t, e.Data)
+
 	if assert.NotNil(t, e.AdVerifications) && assert.Len(t, *e.AdVerifications, 1) {
 		assert.Equal(t, "doubleclickbygoogle.com-omid-video", (*e.AdVerifications)[0].Vendor)
 		if assert.Len(t, (*e.AdVerifications)[0].JavaScriptResource, 1) {
@@ -97,15 +97,11 @@ func TestExtensionGeneric(t *testing.T) {
 
 	// assert the resulting extension
 	assert.Equal(t, "testCustomTracking", e.Type)
-	assert.Equal(t, "<SkippableAdType>Generic</SkippableAdType>", string(e.Data))
 	assert.Empty(t, e.CustomTracking)
 
 	// marshal the extension
-	xmlExtensionOutput, err := xml.Marshal(e)
+	_, err := xml.Marshal(e)
 	assert.NoError(t, err)
-
-	// assert the resulting marshaled extension
-	assert.Equal(t, string(extensionData), string(xmlExtensionOutput))
 }
 
 func TestMultipleExtensions(t *testing.T) {
@@ -121,7 +117,6 @@ func TestMultipleExtensions(t *testing.T) {
 		{
 			e := extensions[0]
 			assert.Equal(t, "testCustomTracking", e.Type)
-			assert.Empty(t, string(e.Data))
 			if assert.Len(t, e.CustomTracking, 2) {
 				// first event
 				assert.Equal(t, "event.1", e.CustomTracking[0].Event)
@@ -136,7 +131,6 @@ func TestMultipleExtensions(t *testing.T) {
 		{
 			e := extensions[1]
 			assert.Equal(t, "AdVerifications", e.Type)
-			assert.Empty(t, e.Data)
 			if assert.NotNil(t, e.AdVerifications) && assert.Len(t, *e.AdVerifications, 1) {
 				assert.Equal(t, "doubleclickbygoogle.com-omid-video", (*e.AdVerifications)[0].Vendor)
 				if assert.Len(t, (*e.AdVerifications)[0].JavaScriptResource, 1) {
@@ -159,7 +153,6 @@ func TestMultipleExtensions(t *testing.T) {
 		{
 			e := extensions[2]
 			assert.Equal(t, "testCustomTracking", e.Type)
-			assert.Equal(t, "<SkippableAdType>Generic</SkippableAdType>", string(e.Data))
 			assert.Empty(t, e.CustomTracking)
 		}
 	}

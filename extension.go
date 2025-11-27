@@ -19,7 +19,6 @@ type Extension struct {
 	CustomTracking []Tracking `xml:"CustomTracking>Tracking,omitempty"  json:",omitempty"`
 	// AdVerifications are IAB Open Measurement tags backported to VAST 2 and 3 as an extension
 	AdVerifications *[]Verification      `xml:"AdVerifications>Verification,omitempty"  json:",omitempty"`
-	Data            string               `xml:",innerxml" json:",omitempty"`
 	SSAICreativeID  *SSAICreativeID      `xml:"SSAICreativeId,omitempty"  json:"ssaiCreativeId,omitempty"`
 	Parameters      []ExtensionParameter `xml:"Parameter,omitempty"  json:"parameters,omitempty"`
 }
@@ -37,13 +36,8 @@ func (e Extension) MarshalXML(enc *xml.Encoder, start xml.StartElement) error {
 	// create a temporary element from a wrapper Extension, copy what we need to
 	// it and return it's encoding.
 	var e2 interface{}
-	// if we have custom trackers or ad verifications, we should ignore the data, if not, then we
-	// should consider only the data
-	if len(e.CustomTracking) == 0 && (e.AdVerifications == nil || len(*e.AdVerifications) == 0) {
-		e2 = extensionOnlyData{Type: e.Type, Data: e.Data}
-	} else {
-		e2 = extension{Type: e.Type, CustomTracking: e.CustomTracking, AdVerifications: e.AdVerifications}
-	}
+
+	e2 = extension{Type: e.Type, CustomTracking: e.CustomTracking, AdVerifications: e.AdVerifications}
 
 	return enc.EncodeElement(e2, start)
 }
@@ -64,9 +58,5 @@ func (e *Extension) UnmarshalXML(dec *xml.Decoder, start xml.StartElement) error
 	e.SSAICreativeID = e2.SSAICreativeID
 	e.Parameters = e2.Parameters
 
-	// copy the data only if customTracking and adVerifications are empty
-	if len(e.CustomTracking) == 0 && (e.AdVerifications == nil || len(*e.AdVerifications) == 0) {
-		e.Data = e2.Data
-	}
 	return nil
 }
