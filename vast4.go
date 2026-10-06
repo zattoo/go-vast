@@ -69,7 +69,7 @@ type ExecutableResource struct {
 	// Identifies the API needed to execute the resource file if applicable.
 	ApiFramework string `xml:"apiFramework,attr,omitempty"`
 	// Identifies the MIME type of the file provided.
-	Type bool `xml:"type,attr,omitempty"`
+	Type string `xml:"type,attr,omitempty"`
 	// A CDATA-wrapped URI to a file providing Closed Caption info for the media file.
 	URI string `xml:",cdata"`
 }
@@ -102,7 +102,7 @@ type InteractiveCreativeFile struct {
 	// Identifies the API needed to execute the resource file if applicable.
 	ApiFramework string `xml:"apiFramework,attr,omitempty"`
 	// Identifies the MIME type of the file provided.
-	Type bool `xml:"type,attr,omitempty"`
+	Type string `xml:"type,attr,omitempty"`
 	// Useful for interactive use cases.
 	// Identifies whether the ad always drops when the duration is reached,
 	// or if it can potentially extend the duration by pausing the underlying video or delaying the adStopped call after adVideoComplete.
@@ -114,11 +114,11 @@ type InteractiveCreativeFile struct {
 
 type ClosedCaptionFile struct {
 	// Identifies the MIME type of the file provided.
-	Type bool `xml:"type,attr,omitempty"`
+	Type string `xml:"type,attr,omitempty"`
 	// Language of the Closed Caption File using ISO 631-1 codes.
 	// An optional locale suffix can also be provided.
 	// Examples - “en”, “en-US”, “zh-TW”,
-	Language bool `xml:"language,attr,omitempty"`
+	Language string `xml:"language,attr,omitempty"`
 	// A CDATA-wrapped URI to a file providing Closed Caption info for the media file.
 	URI string `xml:",cdata"`
 }
